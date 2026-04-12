@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Milano Week — Apr 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+:root { --font: 'Plus Jakarta Sans', Helvetica, Arial, sans-serif; }
+html, body { height: 100%; background: #fff; font-family: var(--font); color: #000; overflow: hidden; }
+
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: #fff; border-bottom: 1px solid #000;
+  padding: 12px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.header-title { font-size: 13px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+.header-meta { font-size: 11px; font-weight: 300; color: #888; letter-spacing: 0.04em; }
+
+.toggle-bar {
+  position: fixed; top: 41px; left: 0; right: 0; z-index: 99;
+  background: #fff; border-bottom: 1px solid #000; display: flex;
+}
+.toggle-btn {
+  flex: 1; padding: 9px 0; border: none; border-right: 1px solid #000;
+  background: transparent; font-family: var(--font); font-size: 10px;
+  font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;
+  cursor: pointer; color: #aaa; transition: background 0.1s, color 0.1s;
+}
+.toggle-btn:last-child { border-right: none; }
+.toggle-btn.active { background: #000 !important; color: #fff !important; }
+
+.months-nav {
+  position: fixed; top: 82px; left: 0; right: 0; z-index: 97;
+  background: #fff; border-bottom: 1px solid #e8e8e8;
+  overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; display: flex;
+}
+.months-nav::-webkit-scrollbar { display: none; }
+.days-nav {
+  position: fixed; top: 82px; left: 0; right: 0; z-index: 98;
+  background: #fff; border-bottom: 1px solid #000;
+  overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; display: flex;
+}
+.days-nav::-webkit-scrollbar { display: none; }
+.day-pill {
+  flex-shrink: 0; padding: 9px 16px; border: none; border-right: 1px solid #e8e8e8;
+  background: transparent; font-family: var(--font); font-size: 10px; font-weight: 400;
+  letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; color: #aaa;
+  transition: background 0.1s, color 0.1s; white-space: nowrap;
+}
+.day-pill:hover { color: #000; }
+.day-pill.active { background: #000; color: #fff; }
+
+.timeline-outer {
+  position: fixed; top: 122px; left: 0; right: 0; bottom: 0;
+  overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin; scrollbar-color: #ccc transparent;
+}
+.timeline-outer::-webkit-scrollbar { height: 3px; }
+.timeline-outer::-webkit-scrollbar-thumb { background: #ccc; }
+
+.timeline-inner {
+  display: flex; align-items: flex-start;
+  padding: 0 20px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.day-col {
+  flex-shrink: 0; width: 260px;
+  height: 100%;
+  overflow-y: auto; overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  border-right: 1px solid #e8e8e8;
+  padding: 24px 20px 40px 0;
+}
+.day-col::-webkit-scrollbar { display: none; }
+.day-col + .day-col { padding-left: 20px; }
+
+.day-header { margin-bottom: 8px; }
+.day-num { font-size: 18px; font-weight: 900; line-height: 1; letter-spacing: 0px; }
+.day-label { font-size: 10px; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; color: #aaa; margin-top: 2px; }
+.day-rule { height: 1px; background: #000; margin: 10px 0 4px; }
+
+.event-card { padding: 12px 0; border-bottom: 1px solid #e8e8e8; }
+.event-card:last-child { border-bottom: none; }
+
+.card-time { font-size: 10px; font-weight: 400; letter-spacing: 0.08em; color: #aaa; margin-bottom: 4px; }
+.card-title { font-size: 13px; font-weight: 500; line-height: 1.35; margin-bottom: 5px; }
+.card-venue { font-size: 11px; font-weight: 300; color: #555; line-height: 1.4; margin-bottom: 2px; }
+.card-address { font-size: 10px; font-weight: 300; color: #aaa; margin-bottom: 6px; }
+
+.card-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+.tag {
+  font-size: 11px; padding: 0; border: none; background: none;
+}
+
+.card-invite {
+  display: inline-block; margin-top: 6px;
+  font-size: 9px; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase;
+  color: #000; border: 1px solid #000; border-radius: 20px; padding: 2px 10px;
+}
+
+.map-link {
+  display: inline-block; margin-top: 6px; font-size: 9px; font-weight: 400;
+  letter-spacing: 0.1em; text-transform: uppercase; color: #aaa;
+  text-decoration: none; border-bottom: 1px solid #ccc;
+}
+.map-link:hover { color: #000; border-color: #000; }
+
+.event-counter {
+  position: fixed; bottom: 14px; right: 16px; font-size: 10px; font-weight: 400;
+  letter-spacing: 0.08em; text-transform: uppercase; color: #aaa; z-index: 200;
+}
+
+@media (max-width: 380px) { .day-col { width: 240px; } .day-num { font-size: 40px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-title">
+    Agenda
+  </div>
+  <div class="header-meta">2026</div>
+</header>
+
+<div class="toggle-bar">
+  <button class="toggle-btn active" data-filter="all" onclick="setFilter('all',this)">Tutto</button>
+  <button class="toggle-btn" data-filter="art" onclick="setFilter('art',this)">Art Week</button>
+  <button class="toggle-btn" data-filter="design" onclick="setFilter('design',this)">Design Week</button>
+  <button class="toggle-btn" data-filter="venezia" onclick="setFilter('venezia',this)">Venezia</button>
+</div>
+
+<div class="days-nav" id="daysNav"></div>
+<div class="timeline-outer" id="timelineOuter">
+  <div class="timeline-inner" id="timelineInner"></div>
+</div>
+<div class="event-counter" id="counter"></div>
+
+<script>
+const DAYS = ['Dom','Lun','Mar','Mer','Gio','Ven','Sab'];
+const MONTHS = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
+function monthName(d) { const [,m]=d.split('.').map(Number); return MONTHS[m-1]; }
+
+// events loaded from events.js
+
+let currentFilter = 'all';
+function dow(d) { return DAYS[parseDate(d).getDay()]; }
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildDaysNav(); renderTimeline();
+}
+
+function filteredForDate(date) {
+  return events.filter(e => e.date===date && (
+    currentFilter==='all' ||
+    (currentFilter==='art' && e.week==='Art Week') ||
+    (currentFilter==='design' && e.week==='Design Week') ||
+    (currentFilter==='venezia' && e.week==='Venezia')
+  ) && (true));
+}
+
+function buildDaysNav() {
+  const nav = document.getElementById('daysNav');
+  nav.innerHTML = '';
+  [...new Set(events.map(e=>e.date))].sort((a,b)=>parseDate(a)-parseDate(b)).forEach(date => {
+    if (!filteredForDate(date).length) return;
+    const [day] = date.split('.');
+    const pill = document.createElement('button');
+    pill.className = 'day-pill';
+    pill.dataset.date = date;
+    pill.textContent = `${dow(date)} ${day}`;
+    pill.onclick = () => {
+      const col = document.querySelector(`.day-col[data-date="${date}"]`);
+      if (col) document.getElementById('timelineOuter').scrollTo({left: col.offsetLeft-20, behavior:'smooth'});
+    };
+    nav.appendChild(pill);
+  });
+}
+
+function renderTimeline() {
+  const inner = document.getElementById('timelineInner');
+  inner.innerHTML = '';
+  let total = 0;
+  [...new Set(events.map(e=>e.date))].sort((a,b)=>parseDate(a)-parseDate(b)).forEach(date => {
+    const evs = filteredForDate(date).sort((a,b)=>(a.start||'00:00').localeCompare(b.start||'00:00'));
+    if (!evs.length) return;
+    const [day] = date.split('.');
+    const col = document.createElement('div');
+    col.className = 'day-col'; col.dataset.date = date;
+    col.innerHTML = `<div class="day-header"><div class="day-num">${day}</div><div class="day-label">${dow(date)} · ${monthName(date)}</div><div class="day-rule"></div></div>`;
+    evs.forEach(ev => {
+      total++;
+      const timeStr = ev.start ? (ev.end ? `${ev.start} – ${ev.end}` : ev.start) : '';
+      const city = ev.week === 'Venezia' ? 'Venezia' : 'Milano';
+      const searchQ = [ev.venue, ev.address, city].filter(Boolean).join(', ');
+      const mapUrl = searchQ ? `https://maps.google.com/?q=${encodeURIComponent(searchQ)}` : '';
+      const tags = [];
+      if (ev.cocktail) tags.push(`<span class="tag">🍸</span>`);
+      if (ev.rsvp) tags.push(`<span class="tag">⭐ rsvp</span>`);
+      // Normalize invite source
+      const inviteMap = {'P:S':'P:S Studio','Karla Otto':'Karla Otto','ALCOVA':'ALCOVA','nctm e l\'arte':'nctm e l\'arte','Opening serale':'','Cocktail a seguire':''};
+      const invite = ev.notes ? (inviteMap.hasOwnProperty(ev.notes) ? inviteMap[ev.notes] : ev.notes) : '';
+      const card = document.createElement('div');
+      card.className = 'event-card';
+      card.innerHTML = `
+        ${timeStr?`<div class="card-time">${timeStr}</div>`:''}
+        <div class="card-title">${ev.event}</div>
+        ${ev.venue?`<div class="card-venue">${ev.venue}</div>`:''}
+        ${ev.address?`<div class="card-address">${ev.address}</div>`:''}
+        ${invite?`<div class="card-invite">${invite}</div>`:''}
+        ${tags.length?`<div class="card-tags">${tags.join('')}</div>`:''}
+        ${mapUrl?`<a class="map-link" href="${mapUrl}" target="_blank">↗ mappa</a>`:''}
+      `;
+      col.appendChild(card);
+    });
+    inner.appendChild(col);
+  });
+  document.getElementById('counter').textContent = `${total} eventi`;
+}
+
+document.getElementById('timelineOuter').addEventListener('scroll', function() {
+  const cols = document.querySelectorAll('.day-col');
+  const scrollLeft = this.scrollLeft + 40;
+  let active = null;
+  cols.forEach(c => { if (c.offsetLeft <= scrollLeft) active = c.dataset.date; });
+  document.querySelectorAll('.day-pill').forEach(p => {
+    const on = p.dataset.date === active;
+    p.classList.toggle('active', on);
+    if (on) p.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+  });
+}, {passive:true});
+
+buildDaysNav(); renderTimeline();
+
+// Password protection
+(function() {
+  const HASH = '7a3f2b9e1c6d4f8a0b5e2d7c9f1a4b6e3d8c0f2a5b7e9d1c4f6a8b0e3d5c7f9';
+  async function sha256(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+  async function hashOf(str) { return sha256(str); }
+
+  // Store hash of correct password to compare against
+  const CORRECT = 'a474219e5e9503c84d59500bb1bda3d9ade81e52d9fa1c234278770892a6dd74';
+
+  const app = document.querySelector('header, .toggle-bar, .days-nav, .timeline-outer, .event-counter');
+
+  // Hide app
+  document.querySelectorAll('header, .toggle-bar, .days-nav, .timeline-outer, .event-counter').forEach(el => el.style.display = 'none');
+
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;font-family:var(--font);gap:0;';
+  overlay.innerHTML = `
+    <img src="img/mascot.png" style="height:260px;width:auto;display:block;margin-bottom:0;mix-blend-mode:multiply;" alt="mascot">
+    <input id="pwInput" type="password" placeholder="password" autocomplete="off" style="
+      border:none; border-bottom:1px solid #000; outline:none;
+      font-family:var(--font); font-size:14px; font-weight:300;
+      text-align:center; padding:8px 0; width:180px; background:transparent;
+      letter-spacing:0.1em; color:#000;
+    ">
+    <div id="pwError" style="font-size:10px;color:#aaa;margin-top:12px;letter-spacing:0.08em;height:14px;"></div>
+  `;
+  document.body.appendChild(overlay);
+
+  const input = overlay.querySelector('#pwInput');
+  const error = overlay.querySelector('#pwError');
+  input.focus();
+
+  async function attempt() {
+    const h = await sha256(input.value.trim());
+    if (h === CORRECT) {
+      overlay.remove();
+      document.querySelectorAll('header, .toggle-bar, .days-nav, .timeline-outer, .event-counter').forEach(el => el.style.display = '');
+    } else {
+      error.textContent = 'password errata';
+      input.value = '';
+      input.focus();
+    }
+  }
+
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') attempt(); error.textContent = ''; });
+})();
+</script>
+</body>
+</html>
