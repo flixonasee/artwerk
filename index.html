@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Milano Week — Apr 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-:root { --font: 'Plus Jakarta Sans', Helvetica, Arial, sans-serif; }
+:root { --font: 'DM Sans', Helvetica, Arial, sans-serif; }
 html, body { height: 100%; background: #fff; font-family: var(--font); color: #000; overflow: hidden; }
 
 header {
@@ -38,8 +38,17 @@ header {
   overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; display: flex;
 }
 .months-nav::-webkit-scrollbar { display: none; }
+.month-pill {
+  flex-shrink: 0; padding: 7px 20px; border: none; border-right: 1px solid #e8e8e8;
+  background: transparent; font-family: var(--font); font-size: 10px; font-weight: 400;
+  letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; color: #aaa;
+  transition: background 0.1s, color 0.1s; white-space: nowrap;
+}
+.month-pill:hover { color: #000; }
+.month-pill.active { background: #000; color: #fff; }
+
 .days-nav {
-  position: fixed; top: 82px; left: 0; right: 0; z-index: 98;
+  position: fixed; top: 118px; left: 0; right: 0; z-index: 98;
   background: #fff; border-bottom: 1px solid #000;
   overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; display: flex;
 }
@@ -54,7 +63,7 @@ header {
 .day-pill.active { background: #000; color: #fff; }
 
 .timeline-outer {
-  position: fixed; top: 122px; left: 0; right: 0; bottom: 0;
+  position: fixed; top: 158px; left: 0; right: 0; bottom: 0;
   overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch;
   scrollbar-width: thin; scrollbar-color: #ccc transparent;
 }
@@ -135,6 +144,7 @@ header {
   <button class="toggle-btn" data-filter="venezia" onclick="setFilter('venezia',this)">Venezia</button>
 </div>
 
+<div class="months-nav" id="monthsNav"></div>
 <div class="days-nav" id="daysNav"></div>
 <div class="timeline-outer" id="timelineOuter">
   <div class="timeline-inner" id="timelineInner"></div>
@@ -146,16 +156,109 @@ const DAYS = ['Dom','Lun','Mar','Mer','Gio','Ven','Sab'];
 const MONTHS = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
 function monthName(d) { const [,m]=d.split('.').map(Number); return MONTHS[m-1]; }
 
-// events loaded from events.js
+const events = [
+  {week:"Art Week",date:"08.04",start:"18:00",end:"21:00",event:"CAO FEI: DASH – Anteprima e cocktail",venue:"Fondazione Prada",address:"Largo Isarco 2",cocktail:1,rsvp:1,notes:"",lat:45.4456,lon:9.2041},
+  {week:"Art Week",date:"13.04",start:"12:00",end:"19:00",event:"MATTA – Social Unrest (Opening)",venue:"MATTA",address:"Via privata Giacomo Favretto 9",cocktail:1,rsvp:1,notes:"Opening serale",lat:45.4835,lon:9.2155},
+  {week:"Art Week",date:"13.04",start:"18:00",end:"",event:"LETIA – Letizia Cariello: Παρνασσός / Parnassus",venue:"GAM – Galleria d'Arte Moderna",address:"Via Palestro 16",cocktail:1,rsvp:1,notes:"Opening serale",lat:45.4723,lon:9.202},
+  {week:"Art Week",date:"13.04",start:"18:00",end:"21:00",event:"Francesca Marconi – Manifesto al Presente",venue:"Fondazione Corrente",address:"Via Carlo Porta 5",cocktail:1,rsvp:1,notes:"nctm e l'arte",lat:45.4721,lon:9.1905},
+  {week:"Art Week",date:"13.04",start:"19:00",end:"20:00",event:"Marco Fusinato – Performance",venue:"PAC – Padiglione d'Arte Contemporanea",address:"Via Palestro 14",cocktail:0,rsvp:1,notes:"",lat:45.4722,lon:9.2015},
+  {week:"Art Week",date:"13.04",start:"19:00",end:"",event:"Performance Fusinato PAC",venue:"PAC – Padiglione d'Arte Contemporanea",address:"Via Palestro 14",cocktail:1,rsvp:1,notes:"",lat:45.4722,lon:9.2015},
+  {week:"Art Week",date:"14.04",start:"17:00",end:"19:00",event:"Art For Tomorrow",venue:"Acquario Civico",address:"Viale Gadio 2",cocktail:1,rsvp:1,notes:"Cocktail a seguire",lat:45.4703,lon:9.1802},
+  {week:"Art Week",date:"14.04",start:"17:00",end:"",event:"ArtLine – Presentazione Octospider e Book Launch",venue:"Golden Goose Arena",address:"Viale Duilio 9",cocktail:0,rsvp:0,notes:"",lat:null,lon:null},
+  {week:"Art Week",date:"14.04",start:"18:00",end:"20:00",event:"Inaugurazione Romane de Watteville",venue:"Istituto Svizzero",address:"Via del Vecchio Politecnico 3",cocktail:0,rsvp:0,notes:"",lat:45.4742,lon:9.2047},
+  {week:"Art Week",date:"15.04",start:"13:00",end:"",event:"Proiezione Dolle di Diego Marcon",venue:"Cineteca Arlecchino",address:"Via San Pietro all'Orto 9",cocktail:0,rsvp:0,notes:"",lat:45.467,lon:9.1968},
+  {week:"Art Week",date:"16.04",start:"11:00",end:"21:00",event:"Opening VIP miart",venue:"Allianz MiCo",address:"Viale Scarampo",cocktail:1,rsvp:1,notes:"",lat:45.4781,lon:9.1547},
+  {week:"Art Week",date:"16.04",start:"19:00",end:"22:30",event:"Art Night nei Musei Civici",venue:"Musei Civici Milano",address:"",cocktail:1,rsvp:1,notes:"",lat:null,lon:null},
+  {week:"Art Week",date:"17.04",start:"11:00",end:"18:00",event:"Paris Internationale VIP Preview",venue:"Palazzo Galbani",address:"Via Fabio Filzi 25",cocktail:1,rsvp:1,notes:"",lat:45.487,lon:9.2075},
+  {week:"Art Week",date:"17.04",start:"11:00",end:"18:00",event:"Preview Paris Internationale",venue:"Paris Internationale",address:"",cocktail:1,rsvp:1,notes:"",lat:null,lon:null},
+  {week:"Art Week",date:"17.04",start:"17:00",end:"",event:"Mototrombe – performance urbana",venue:"Piazza Duca d'Aosta",address:"",cocktail:0,rsvp:0,notes:"",lat:45.4857,lon:9.2046},
+  {week:"Art Week",date:"17.04",start:"17:30",end:"",event:"Alchemia tra Scienza e Arte (Anselm Kiefer talk)",venue:"Teatro Dal Verme",address:"Via San Giovanni sul Muro 2",cocktail:0,rsvp:0,notes:"",lat:45.4675,lon:9.1812},
+  {week:"Art Week",date:"17.04",start:"19:00",end:"23:00",event:"After After Party (Mousse)",venue:"Istituto Svizzero",address:"Via del Vecchio Politecnico 3",cocktail:1,rsvp:1,notes:"",lat:45.4742,lon:9.2047},
+  {week:"Art Week",date:"17.04",start:"19:00",end:"",event:"Milano Art Week Party",venue:"BIM",address:"",cocktail:1,rsvp:1,notes:"",lat:null,lon:null},
+  {week:"Art Week",date:"18.04",start:"15:00",end:"18:30",event:"Corpi nel paRco – Corpi sul palco al Teatro Continuo",venue:"Teatro Continuo, Parco Sempione",address:"Parco Sempione",cocktail:0,rsvp:0,notes:"nctm e l'arte",lat:45.4726,lon:9.1794},
+  {week:"Design Week",date:"18.04",start:"14:00",end:"18:00",event:"ACERBIS x PLAN C Private Preview",venue:"Plan C Framework",address:"Via Manzoni 21",cocktail:0,rsvp:0,notes:"P:S",lat:45.4698,lon:9.195},
+  {week:"Design Week",date:"18.04",start:"16:00",end:"21:00",event:"STUDIOBOOM 10th Anniversary – Private Party",venue:"Studioboom",address:"Via Hayez 2",cocktail:1,rsvp:1,notes:"Karla Otto",lat:45.4785,lon:9.2135},
+  {week:"Design Week",date:"18.04",start:"19:00",end:"22:00",event:"APARTAMENTO x MULLER VAN SEVEREN Opening",venue:"Ordet",address:"Via Filippino Lippi 4",cocktail:1,rsvp:1,notes:"P:S",lat:45.4775,lon:9.213},
+  {week:"Design Week",date:"19.04",start:"10:00",end:"18:00",event:"GALLOTTI & RADICE Private Preview",venue:"Palazzo Meli Lupi di Soragna",address:"Via Manin 13",cocktail:0,rsvp:0,notes:"P:S",lat:45.4735,lon:9.2005},
+  {week:"Design Week",date:"19.04",start:"10:00",end:"17:00",event:"cc-tapis Private Preview",venue:"cc-tapis showroom",address:"Piazza Santo Stefano 10",cocktail:0,rsvp:0,notes:"P:S",lat:45.4628,lon:9.196},
+  {week:"Design Week",date:"19.04",start:"10:00",end:"19:00",event:"TACCHINI Private Preview",venue:"Casa Tacchini",address:"Largo Treves 5",cocktail:0,rsvp:0,notes:"P:S",lat:45.472,lon:9.1875},
+  {week:"Design Week",date:"19.04",start:"10:30",end:"15:30",event:"DEDAR Private Preview",venue:"Dedar showroom",address:"Via Lazzaretto 15",cocktail:0,rsvp:0,notes:"P:S",lat:45.479,lon:9.2065},
+  {week:"Design Week",date:"19.04",start:"14:00",end:"18:00",event:"ITALY SEGRETA – How Italy Feels",venue:"Camparino in Galleria",address:"Piazza del Duomo 21",cocktail:1,rsvp:1,notes:"Karla Otto",lat:45.4642,lon:9.1895},
+  {week:"Design Week",date:"19.04",start:"15:00",end:"19:00",event:"YVES SALOMON ÉDITIONS Private Preview",venue:"Casa Mascagni",address:"Via Pietro Mascagni 22",cocktail:1,rsvp:1,notes:"P:S",lat:45.463,lon:9.207},
+  {week:"Design Week",date:"19.04",start:"15:00",end:"21:00",event:"MARIMEKKO Soft Opening",venue:"Osteria Grand Hotel",address:"Via Ascanio Sforza 75",cocktail:0,rsvp:0,notes:"P:S",lat:45.4465,lon:9.1755},
+  {week:"Design Week",date:"19.04",start:"17:00",end:"20:00",event:"cc-tapis Cocktail",venue:"cc-tapis showroom",address:"Piazza Santo Stefano 10",cocktail:1,rsvp:1,notes:"P:S",lat:45.4628,lon:9.196},
+  {week:"Design Week",date:"19.04",start:"17:00",end:"20:00",event:"ARKET x Laila Gohar",venue:"Giardino delle Arti",address:"Via Palestro 8",cocktail:1,rsvp:1,notes:"Karla Otto",lat:45.4718,lon:9.2012},
+  {week:"Design Week",date:"19.04",start:"17:00",end:"20:00",event:"JIL SANDER Reference Library Cocktail",venue:"Jil Sander Showroom",address:"Via Luca Beltrami 5",cocktail:1,rsvp:1,notes:"Karla Otto",lat:45.469,lon:9.1795},
+  {week:"Design Week",date:"19.04",start:"19:00",end:"23:00",event:"VOCLA",venue:"Baggio Military Hospital – Hangar 2",address:"Via Giovanni Labus 10",cocktail:1,rsvp:1,notes:"ALCOVA",lat:45.507,lon:9.115},
+  {week:"Design Week",date:"20.04",start:"11:00",end:"19:00",event:"FROMM.LAB",venue:"ALCOVA – Lavanderia L7",address:"Via Giovanni Labus 15",cocktail:0,rsvp:0,notes:"P:S",lat:45.5075,lon:9.1155},
+  {week:"Design Week",date:"20.04",start:"14:00",end:"19:00",event:"BD BARCELONA Private Preview & Drinks",venue:"Zazà",address:"Via Privata Leopoldo Gasparotto 4",cocktail:0,rsvp:0,notes:"P:S",lat:45.4845,lon:9.156},
+  {week:"Design Week",date:"20.04",start:"17:00",end:"21:00",event:"APARTAMENTO Book Launch & Drinks",venue:"Ordet",address:"Via Filippino Lippi 4",cocktail:1,rsvp:1,notes:"P:S",lat:45.4775,lon:9.213},
+  {week:"Design Week",date:"20.04",start:"18:00",end:"22:00",event:"DAFT ABOUT DRAFT Cocktail",venue:"Teatro Gerolamo",address:"Piazza Cesare Beccaria 8",cocktail:1,rsvp:1,notes:"P:S",lat:45.4655,lon:9.1955},
+  {week:"Design Week",date:"20.04",start:"18:30",end:"21:00",event:"TACCHINI Cocktail",venue:"Casa Tacchini",address:"Largo Treves 5",cocktail:1,rsvp:1,notes:"P:S",lat:45.472,lon:9.1875},
+  {week:"Design Week",date:"20.04",start:"",end:"",event:"GLAS ITALIA Installation",venue:"",address:"Corso Venezia 18",cocktail:0,rsvp:0,notes:"P:S",lat:45.4698,lon:9.2025},
+  {week:"Design Week",date:"21.04",start:"",end:"",event:"POLIFORM Installation",venue:"Palazzo Clerici",address:"Via Clerici 5",cocktail:0,rsvp:0,notes:"P:S",lat:45.4665,lon:9.1855},
+  {week:"Design Week",date:"21.04",start:"18:00",end:"21:00",event:"MARIMEKKO – The Plant Aperitivo",venue:"Osteria Grand Hotel",address:"Via Ascanio Sforza 75",cocktail:1,rsvp:1,notes:"P:S",lat:45.4465,lon:9.1755},
+  {week:"Design Week",date:"22.04",start:"18:00",end:"21:00",event:"ACERBIS x PLAN C Cocktail",venue:"Plan C Framework",address:"Via Manzoni 21",cocktail:1,rsvp:1,notes:"P:S",lat:45.4698,lon:9.195},
+  {week:"Design Week",date:"22.04",start:"18:45",end:"",event:"Jonas Staal in dialogo con Martina Angelotti",venue:"Studio Advant Nctm",address:"Via Agnello 12",cocktail:0,rsvp:0,notes:"nctm e l'arte",lat:45.4645,lon:9.1905},
+  {week:"Design Week",date:"22.04",start:"19:00",end:"22:00",event:"BACCARAT Cocktail",venue:"",address:"Via Marco Formentini 10",cocktail:1,rsvp:1,notes:"P:S",lat:45.4695,lon:9.1825},
+  {week:"Design Week",date:"23.04",start:"12:00",end:"20:00",event:"MIU MIU Literary Club (Nadia)",venue:"Circolo Filologico Milanese",address:"Via Clerici 1",cocktail:1,rsvp:1,notes:"",lat:45.4672,lon:9.1885},
+  {week:"Venezia",date:"06.05",start:"10:00",end:"18:00",event:"Professionals Preview – Arsenale",venue:"Arsenale",address:"Castello, Venezia",cocktail:0,rsvp:0,notes:"Biennale Arte 2026",lat:45.4322,lon:12.3564},
+  {week:"Venezia",date:"07.05",start:"10:00",end:"18:00",event:"Professionals Preview – Arsenale",venue:"Arsenale",address:"Castello, Venezia",cocktail:0,rsvp:0,notes:"Biennale Arte 2026",lat:45.4322,lon:12.3564},
+  {week:"Venezia",date:"08.05",start:"10:00",end:"18:00",event:"Professionals Preview – Arsenale",venue:"Arsenale",address:"Castello, Venezia",cocktail:0,rsvp:0,notes:"Biennale Arte 2026",lat:45.4322,lon:12.3564},
+
+];
 
 let currentFilter = 'all';
+let currentMonth = 'all';
+
+function buildMonthsNav() {
+  const nav = document.getElementById('monthsNav');
+  nav.innerHTML = '';
+
+  // Collect months present for current filter
+  const filtered = events.filter(e =>
+    currentFilter === 'all' ||
+    (currentFilter === 'art' && e.week === 'Art Week') ||
+    (currentFilter === 'design' && e.week === 'Design Week') ||
+    (currentFilter === 'venezia' && e.week === 'Venezia')
+  );
+  const months = [...new Set(filtered.map(e => e.date.split('.')[1]))].sort();
+  if (months.length <= 1) { nav.style.display = 'none'; return; }
+  nav.style.display = 'flex';
+
+  // "Tutti" pill
+  const all = document.createElement('button');
+  all.className = 'month-pill' + (currentMonth === 'all' ? ' active' : '');
+  all.textContent = 'Tutti';
+  all.onclick = () => setMonth('all', all);
+  nav.appendChild(all);
+
+  months.forEach(m => {
+    const pill = document.createElement('button');
+    pill.className = 'month-pill' + (currentMonth === m ? ' active' : '');
+    pill.dataset.month = m;
+    pill.textContent = MONTHS[parseInt(m)-1];
+    pill.onclick = () => setMonth(m, pill);
+    nav.appendChild(pill);
+  });
+}
+
+function setMonth(m, btn) {
+  currentMonth = m;
+  document.querySelectorAll('.month-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  buildMonthsNav(); buildDaysNav(); renderTimeline();
+}
+
+function parseDate(d) { const [day,month]=d.split('.').map(Number); return new Date(2026,month-1,day); }
 function dow(d) { return DAYS[parseDate(d).getDay()]; }
 
 function setFilter(f, btn) {
   currentFilter = f;
+  currentMonth = 'all';
   document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  buildDaysNav(); renderTimeline();
+  buildMonthsNav(); buildDaysNav(); renderTimeline();
 }
 
 function filteredForDate(date) {
@@ -164,7 +267,7 @@ function filteredForDate(date) {
     (currentFilter==='art' && e.week==='Art Week') ||
     (currentFilter==='design' && e.week==='Design Week') ||
     (currentFilter==='venezia' && e.week==='Venezia')
-  ) && (true));
+  ) && (currentMonth==='all' || e.date.split('.')[1]===currentMonth));
 }
 
 function buildDaysNav() {
@@ -252,10 +355,10 @@ buildDaysNav(); renderTimeline();
   // Store hash of correct password to compare against
   const CORRECT = 'a474219e5e9503c84d59500bb1bda3d9ade81e52d9fa1c234278770892a6dd74';
 
-  const app = document.querySelector('header, .toggle-bar, .days-nav, .timeline-outer, .event-counter');
+  const app = document.querySelector('header, .toggle-bar, .months-nav, .days-nav, .timeline-outer, .event-counter');
 
   // Hide app
-  document.querySelectorAll('header, .toggle-bar, .days-nav, .timeline-outer, .event-counter').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('header, .toggle-bar, .months-nav, .days-nav, .timeline-outer, .event-counter').forEach(el => el.style.display = 'none');
 
   const overlay = document.createElement('div');
   overlay.style.cssText = 'position:fixed;inset:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;font-family:var(--font);gap:0;';
@@ -279,7 +382,7 @@ buildDaysNav(); renderTimeline();
     const h = await sha256(input.value.trim());
     if (h === CORRECT) {
       overlay.remove();
-      document.querySelectorAll('header, .toggle-bar, .days-nav, .timeline-outer, .event-counter').forEach(el => el.style.display = '');
+      document.querySelectorAll('header, .toggle-bar, .months-nav, .days-nav, .timeline-outer, .event-counter').forEach(el => el.style.display = '');
     } else {
       error.textContent = 'password errata';
       input.value = '';
