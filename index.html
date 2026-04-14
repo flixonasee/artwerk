@@ -8,23 +8,29 @@
 <title>Agenda 2026</title>
 <style>
 @font-face {
-  font-family: 'Artwerk';
-  src: url('fonts/artwerk.woff2') format('woff2'), url('fonts/artwerk.woff') format('woff');
-  font-weight: 400; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: 'Artwerk';
-  src: url('fonts/artwerk-light.woff2') format('woff2'), url('fonts/artwerk-light.woff') format('woff');
-  font-weight: 300; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: 'Artwerk';
-  src: url('fonts/artwerk-medium.woff2') format('woff2'), url('fonts/artwerk-medium.woff') format('woff');
-  font-weight: 500; font-style: normal; font-display: swap;
+  font-family: arial;
+  /* src: url('fonts/ABCDiatype-Regular.woff2') format('woff2'), url('fonts/ABCDiatype-Regular.woff') format('woff'); */
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
+/* @font-face {
+  font-family: venezia;
+  src: url('fonts/ABCDiatype-Light.woff2') format('woff2'), url('fonts/ABCDiatype-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ABC Diatype';
+  src: url('fonts/ABCDiatype-Medium.woff2') format('woff2'), url('fonts/ABCDiatype-Medium.woff') format('woff');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+*/
+
 :root {
-  --f: 'Artwerk', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --f: arial;
   --black: #0a0a0a;
   --g1: #f2f2f2;
   --g2: #e0e0e0;
@@ -36,53 +42,77 @@
   --dh: 36px;
   --chrome: calc(44px + 38px + 36px);
   --col: 270px;
-  --c-all:     #0a0a0a;
-  --c-art:     #C13B2A;
-  --c-design:  #1C3D6E;
-  --c-venezia: #2A7A4B;
+  --c-all: #0a0a0a;
+  --c-art: #7d460b;
+  --c-design: #ff0000;
+  --c-venezia: #538bb3;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { height: 100%; -webkit-text-size-adjust: 100%; }
 body {
-  height: 100%; overflow: hidden;
+  height: 100%;
+  overflow: hidden;
   font-family: var(--f);
-  background: var(--white); color: var(--black);
+  background: var(--white);
+  color: var(--black);
   -webkit-tap-highlight-color: transparent;
   -webkit-font-smoothing: antialiased;
 }
 
 /* HEADER */
 #hd {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-  height: var(--hh); background: var(--white);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  height: var(--hh);
+  background: var(--white);
   border-bottom: 1px solid var(--black);
-  display: grid; grid-template-columns: 28px 1fr auto;
-  align-items: center; padding: 0 16px; gap: 12px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding: 0 16px;
+  gap: 12px;
+  justify-content: space-between;
 }
-#hd-av {
-  width: 28px; height: 28px; border-radius: 50%;
-  overflow: hidden; background: var(--g1);
-}
-#hd-av img { width: 100%; height: 100%; object-fit: cover; display: block; }
-#hd-t { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; }
-#hd-d { font-size: 10px; font-weight: 300; color: var(--black); letter-spacing: 0.06em; }
+
+#hd-t {font-size: 11px;font-weight: 500;letter-spacing: 0.04em;text-transform: uppercase;}
+#hd-d { font-size: 10px; font-weight: 300; color: var(--black); letter-spacing: 0.04em; }
 
 /* FILTER */
 #fb {
-  position: fixed; top: var(--hh); left: 0; right: 0; z-index: 49;
-  height: var(--fh); border-bottom: 1px solid var(--black);
-  display: flex; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  position: fixed;
+  top: var(--hh);
+  left: 0;
+  right: 0;
+  z-index: 49;
+  height: var(--fh);
+  border-bottom: 1px solid var(--black);
+  display: flex;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
 #fb::-webkit-scrollbar { display: none; }
 .fb {
-  flex-shrink: 0; height: 100%; padding: 0 20px;
-  border: none; border-right: 1px solid var(--black);
-  background: transparent; font-family: var(--f); font-size: 9px; font-weight: 400;
-  letter-spacing: 0.12em; text-transform: uppercase; color: var(--black);
-  cursor: pointer; transition: background 0.12s, color 0.12s; white-space: nowrap;
+  flex-shrink: 0;
+  height: 100%;
+  padding: 0 20px;
+  border: none;
+  /* border-right: 1px solid var(--black); */
+  background: transparent;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--black);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+  white-space: nowrap;
 }
-.fb:last-child { border-right: none; }
+
 .fb[onclick*="'all'"].on    { background: var(--c-all);     color: var(--white); }
 .fb[onclick*="'art'"].on    { background: var(--c-art);     color: var(--white); }
 .fb[onclick*="'design'"].on { background: var(--c-design);  color: var(--white); }
@@ -90,19 +120,37 @@ body {
 
 /* DAYS */
 #ds {
-  position: fixed; top: calc(var(--hh) + var(--fh)); left: 0; right: 0; z-index: 48;
-  height: var(--dh); background: var(--white); border-bottom: 1px solid var(--g2);
-  display: flex; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  position: fixed;
+  top: calc(var(--hh) + var(--fh));
+  left: 0;
+  right: 0;
+  z-index: 48;
+  height: var(--dh);
+  background: var(--white);
+  border-bottom: 1px solid var(--black);
+  display: flex;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
 #ds::-webkit-scrollbar { display: none; }
 .db {
-  flex-shrink: 0; height: 100%; padding: 0 14px;
-  border: none; border-right: 1px solid var(--g2);
-  background: transparent; font-family: var(--f); font-size: 9px; font-weight: 400;
-  letter-spacing: 0.1em; text-transform: uppercase; color: var(--black);
-  cursor: pointer; white-space: nowrap; transition: background 0.12s, color 0.12s;
+  flex-shrink: 0;
+  height: 100%;
+  padding: 0 14px;
+  border: none;
+  /* border-right: 1px solid var(--black); */
+  background: transparent;
+  font-family: var(--f);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+  color: var(--black);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s, color 0.12s;
 }
-.db:last-child { border-right: none; }
 
 /* TIMELINE */
 #to {
@@ -116,45 +164,64 @@ body {
 
 /* DAY COL */
 .dc {
-  flex-shrink: 0; width: var(--col); height: 100%;
-  overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch;
-  scrollbar-width: none; border-right: 1px solid var(--g2);
+  flex-shrink: 0;
+  width: var(--col);
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  border-right: 1px solid var(--black);
   padding: 20px 18px 60px 0;
 }
 .dc + .dc { padding-left: 18px; }
 .dc::-webkit-scrollbar { display: none; }
 
-.ch { margin-bottom: 12px; }
-.cd { font-size: 10px; font-weight: 400; letter-spacing: 0.1em; color: var(--black); text-transform: uppercase; margin-bottom: 1px; }
-.cn { font-size: 36px; font-weight: 300; line-height: 1; letter-spacing: -1px; color: var(--black); }
+.ch {margin-bottom: 0px;}
+.cd {font-size: 10px;font-weight: 400;letter-spacing: 0em;color: var(--black);text-transform: uppercase;margin-bottom: 1px;text-align: center;}
+.cn {font-size: 19px;font-weight: 400;line-height: 2;letter-spacing: -1px;color: var(--black);background: #eeeeee;border-radius: 20px;border: solid 1px #000;text-align: center;}
 .cr { margin-top: 8px; height: 1px; background: var(--black); }
 
 /* CARD */
-.card { padding: 11px 0; border-bottom: 1px solid var(--g2); }
+.card {padding: 11px 0;border-bottom: 1px solid var(--black);margin-bottom: 0px;}
 .card:last-child { border-bottom: none; }
-.ct  { font-size: 9px; font-weight: 400; letter-spacing: 0.1em; color: var(--black); margin-bottom: 4px; text-transform: uppercase; }
-.cn2 { font-size: 13px; font-weight: 500; line-height: 1.4; margin-bottom: 4px; color: var(--black); }
-.cv  { font-size: 11px; font-weight: 400; color: var(--black); line-height: 1.4; }
-.ca  { font-size: 10px; font-weight: 300; color: var(--black); margin-top: 1px; }
+.ct  {font-size: 13px;font-weight: 400;letter-spacing: 0em;color: var(--black);margin-bottom: 4px;text-transform: uppercase;}
+.cn2 {font-size: 15px;font-weight: 400;line-height: 1.2;margin-bottom: 4px;color: var(--black);}
+.cv  {font-size: 13px;font-weight: 400;color: var(--black);line-height: 1.1;margin-top: 20px;}
+.ca  {font-size: 13px;font-weight: 400;color: var(--black);margin-top: 1px;margin-bottom: 24px;line-height: 1;}
 .cr2 { display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
 .ci  {
-  font-size: 8px; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;
-  border: 1px solid var(--black); border-radius: 20px; padding: 2px 8px;
-  color: var(--black); white-space: nowrap;
+  font-size: 8px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  text-transform: none;
+  border: 0.7px solid var(--black);
+  border-radius: 20px;
+  padding: 2px 8px;
+  color: var(--black);
+  white-space: nowrap;
 }
 .ctag { font-size: 10px; line-height: 1; }
-.cact { display: flex; gap: 12px; margin-top: 8px; align-items: center; }
+.cact {display: flex;gap: 12px;margin-top: 8px;align-items: center;margin-bottom: 11px;}
 .cl {
-  font-size: 8px; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--black); text-decoration: none;
-  border: none; border-bottom: 1px solid var(--black); padding-bottom: 1px;
-  cursor: pointer; background: none; font-family: var(--f);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  text-transform: none;
+  color: var(--black);
+  text-decoration: none;
+  border: none;
+  border-bottom: 1px solid var(--black);
+  padding-bottom: 1px;
+  cursor: pointer;
+  background: none;
+  font-family: var(--f);
 }
 
 /* COUNTER */
 #ctr {
   position: fixed; bottom: 12px; right: 14px; z-index: 40;
-  font-size: 9px; font-weight: 400; letter-spacing: 0.1em;
+  font-size: 9px; font-weight: 400; letter-spacing: 0.04em;
   text-transform: uppercase; color: var(--black);
 }
 
@@ -184,7 +251,7 @@ body {
 #cs-cl {
   width: 100%; padding: 14px; border: none; border-top: 1px solid var(--g2);
   background: transparent; font-family: var(--f); font-size: 11px; font-weight: 400;
-  letter-spacing: 0.08em; text-transform: uppercase; color: var(--black); cursor: pointer; margin-top: 4px;
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--black); cursor: pointer; margin-top: 4px;
 }
 #cs-cl:active { background: var(--g1); }
 
@@ -197,9 +264,66 @@ body {
 #lg input {
   border: none; border-bottom: 1px solid var(--black); outline: none;
   font-family: var(--f); font-size: 13px; font-weight: 300; text-align: center;
-  padding: 8px 0; width: 160px; background: transparent; letter-spacing: 0.12em; color: var(--black);
+  padding: 8px 0; width: 160px; background: transparent; letter-spacing: 0.04em; color: var(--black);
 }
-#lg-err { margin-top: 10px; height: 14px; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--black); }
+#lg-err { margin-top: 10px; height: 14px; font-size: 9px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--black); }
+
+/* DOTS */
+.cdot {
+  display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+  flex-shrink: 0; margin-right: 6px; vertical-align: middle; position: relative; top: -1px;
+}
+.cdot-art     { background: var(--c-art); }
+.cdot-design  { background: var(--c-design); }
+.cdot-venezia { background: var(--c-venezia); }
+
+/* COLOR MODE */
+body.color .cn2 { color: var(--card-color, var(--ink)); }
+body.color .cv  { color: var(--card-color, var(--ink)); }
+body.color .ca  { color: var(--card-color, var(--ink)); }
+body.color .ct  { color: var(--card-color, var(--ink)); }
+body.color .cl  { color: var(--card-color, var(--ink)); border-color: var(--card-color, var(--ink)); }
+body.color .ci  { color: var(--card-color, var(--ink)); border-color: var(--card-color, var(--ink)); }
+body.color .card { border-bottom-color: var(--card-color, var(--ink)); }
+
+/* SWITCHES */
+.hd-switches { display: flex; align-items: center; gap: 6px; }
+.sw-btn {
+  font-family: var(--f);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--ink);
+  padding: 4px 9px;
+  line-height: 1;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s, color 0.12s;
+}
+.sw-btn.on { background: var(--ink); color: var(--bg); }
+
+/* CAL BUTTON */
+#hd-cal {
+  font-family: var(--f);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--ink);
+  padding: 4px 9px;
+  line-height: 1;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s, color 0.12s;
+}
+#hd-cal:active { background: var(--ink); color: var(--bg); }
 </style>
 </head>
 <body>
@@ -211,9 +335,13 @@ body {
 </div>
 
 <div id="hd">
-  <div id="hd-av"><img src="img/avatar.png" alt=""></div>
+ 
   <div id="hd-t">Agenda</div>
-  <div id="hd-d">2026</div>
+  <div class="hd-switches">
+    <button class="sw-btn" id="sw-dark" onclick="toggleDark(this)">dark</button>
+    <button class="sw-btn" id="sw-color" onclick="toggleColor(this)">colore</button>
+    <button id="hd-cal" onclick="subscribeAll()">+ cal</button>
+  </div>
 </div>
 
 <div id="fb">
@@ -255,7 +383,7 @@ body {
 const events = [
   {week:"Art Week",date:"12.04",start:"19:00",end:"",event:"Dora Perini – Memoria Ceramica",venue:"CreDa",address:"Via Orti 12",cocktail:1,notes:""},
   {week:"Art Week",date:"08.04",start:"18:00",end:"21:00",event:"CAO FEI: DASH – Anteprima e cocktail",venue:"Fondazione Prada",address:"Largo Isarco 2",cocktail:1,notes:""},
-  {week:"Art Week",date:"13.04",start:"12:00",end:"19:00",event:"MATTA – Social Unrest (Opening)",venue:"MATTA",address:"Via privata Giacomo Favretto 9",cocktail:1,notes:""},
+  {week:"Art Week",date:"13.04",start:"12:00",end:"19:00",event:"MATTA – Social Unrest (Opening)",venue:"MATTA",address:"Via privata Giacomo Favretto 9",cocktail:0,notes:""},
   {week:"Art Week",date:"13.04",start:"18:00",end:"",event:"LETIA – Letizia Cariello: Παρνασσός / Parnassus",venue:"GAM – Galleria d'Arte Moderna",address:"Via Palestro 16",cocktail:0,notes:""},
   {week:"Art Week",date:"13.04",start:"18:00",end:"21:00",event:"Francesca Marconi – Manifesto al Presente",venue:"Fondazione Corrente",address:"Via Carlo Porta 5",cocktail:1,notes:"nctm e l'arte"},
   {week:"Art Week",date:"13.04",start:"19:00",end:"21:00",event:"Marco Fusinato – Performance",venue:"PAC – Padiglione d'Arte Contemporanea",address:"Via Palestro 14",cocktail:0,notes:""},
@@ -297,6 +425,12 @@ const events = [
   {week:"Venezia",date:"07.05",start:"10:00",end:"18:00",event:"Professionals Preview – Arsenale",venue:"Arsenale",address:"Castello, Venezia",cocktail:0,notes:"Biennale Arte 2026"},
   {week:"Venezia",date:"08.05",start:"10:00",end:"18:00",event:"Professionals Preview – Arsenale",venue:"Arsenale",address:"Castello, Venezia",cocktail:0,notes:"Biennale Arte 2026"},
   {week:"Venezia",date:"09.05",start:"",end:"",event:"Álvaro Urbano – Still Joy: from Ukraine into the World",venue:"Palazzo Contarini Polignac",address:"Dorsoduro, Venezia",cocktail:0,notes:"chert ludde"},
+  {week:"Design Week",date:"19.04",start:"16:00",end:"19:00",event:"Exploring the Burberry Trench – Talk",venue:"Burberry",address:"Via Sant'Andrea, Milano",cocktail:0,notes:"Mousse"},
+  {week:"Design Week",date:"22.04",start:"18:30",end:"21:00",event:"Paul & Shark x Archivio Alessandro Mendini – Cocktail",venue:"Paul & Shark Boutique",address:"Via Montenapoleone 16",cocktail:1,notes:"Karla Otto"},
+  {week:"Art Week",date:"14.04",start:"18:00",end:"21:00",event:"Vernissage – Launch",venue:"Gallerie d'Italia",address:"",cocktail:1,notes:"Karla Otto"},
+
+  {week:"Design Week",date:"20.04",start:"21:00",end:"",event:"Compleanno Flaminia Veronesi",venue:"",address:"Via Lorenteggio 157",cocktail:1,notes:""},
+
 ];
 
 const DAYS  = ['Dom','Lun','Mar','Mer','Gio','Ven','Sab'];
@@ -412,16 +546,17 @@ function buildTL() {
       const mu=sq?`https://maps.google.com/?q=${encodeURIComponent(sq)}`:'';
       const inv=ev.notes?(IMAP.hasOwnProperty(ev.notes)?IMAP[ev.notes]:ev.notes):'';
       const c=document.createElement('div'); c.className='card';
-      const evJSON=JSON.stringify(ev).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      const dotClass = ev.week==='Art Week'?'cdot-art':ev.week==='Design Week'?'cdot-design':'cdot-venezia';
+      const cardColor = ev.week==='Art Week'?'var(--c-art)':ev.week==='Design Week'?'var(--c-design)':'var(--c-venezia)';
+      c.style.setProperty('--card-color', cardColor);
       c.innerHTML=`
         ${ts?`<div class="ct">${ts}</div>`:''}
-        <div class="cn2">${ev.cocktail?'🍸 ':''}${ev.event}</div>
+        <div class="cn2"><span class="cdot ${dotClass}"></span>${ev.cocktail?'🍸 ':''}${ev.event}</div>
         ${ev.venue?`<div class="cv">${ev.venue}</div>`:''}
         ${ev.address?`<div class="ca">${ev.address}</div>`:''}
         ${inv?`<div class="cr2"><span class="ci">${inv}</span></div>`:''}
         <div class="cact">
           ${mu?`<a class="cl" href="${mu}" target="_blank" rel="noopener">↗ mappa</a>`:''}
-          <button class="cl" onclick="openCS(${evJSON.replace(/"/g,'&quot;')})">+ calendario</button>
         </div>`;
       col.appendChild(c);
     });
@@ -441,6 +576,51 @@ document.getElementById('to').addEventListener('scroll',function(){
     if(on) p.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
   });
 },{passive:true});
+
+
+// DARK / COLOR TOGGLES
+function toggleDark(btn) {
+  document.body.classList.toggle('dark');
+  btn.classList.toggle('on');
+}
+function toggleColor(btn) {
+  document.body.classList.toggle('color');
+  btn.classList.toggle('on');
+}
+
+// CALENDAR SUBSCRIBE
+function subscribeAll() {
+  const pad = n => String(n).padStart(2,'0');
+  const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Agenda 2026//IT',
+    'CALSCALE:GREGORIAN','X-WR-CALNAME:Agenda 2026','X-WR-TIMEZONE:Europe/Rome'];
+  events.forEach(ev => {
+    const [dy,mo] = ev.date.split('.').map(Number);
+    const ds = `2026${pad(mo)}${pad(dy)}`;
+    const toT = t => t ? `${ds}T${t.replace(':','')}00` : ds;
+    const endT = ev.end ? toT(ev.end) : ev.start ? (()=>{
+      const [hh,mm] = ev.start.split(':').map(Number);
+      const tot = hh*60+mm+60;
+      return `${ds}T${pad(Math.floor(tot/60)%24)}${pad(tot%60)}00`;
+    })() : ds;
+    const loc = [ev.venue, ev.address].filter(Boolean).join(', ');
+    lines.push('BEGIN:VEVENT',
+      `UID:${ds}-${Math.random().toString(36).slice(2)}@agenda2026`,
+      `DTSTAMP:20260101T000000Z`,
+      `DTSTART:${toT(ev.start)}`, `DTEND:${endT}`,
+      `SUMMARY:${ev.cocktail?'🍸 ':''}${ev.event}`,
+      `CATEGORIES:${ev.week}`,
+      ...(loc ? [`LOCATION:${loc}`] : []),
+      ...(ev.notes ? [`DESCRIPTION:${ev.notes}`] : []),
+      'END:VEVENT');
+  });
+  lines.push('END:VCALENDAR');
+  const blob = new Blob([lines.join('\r\n')], {type:'text/calendar;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download='agenda2026.ics';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
 
 // PASSWORD
 (function(){
